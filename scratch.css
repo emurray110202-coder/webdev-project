@@ -1,0 +1,139 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #f4efe6;
+  color: #222222;
+}
+
+.page-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 25px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.page-header h1 {
+  font-size: 2.7rem;
+  margin-bottom: 10px;
+}
+
+.page-header p {
+  font-size: 1.1rem;
+  max-width: 800px;
+  margin: 0 auto 20px;
+}
+
+.anchor-link {
+  font-weight: bold;
+  text-decoration: none;
+  color: #1d4ed8;
+}
+
+.anchor-link:hover {
+  text-decoration: underline;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.section {
+  padding: 28px;
+  border-radius: 12px;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+}
+
+.card-alt {
+  background-color: #fcf3dc;
+  border: 1px solid #e6c98f;
+}
+
+.feature-image {
+  display: block;
+  margin: 20px auto;
+  max-width: 100%;
+  width: 320px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+figcaption {
+  text-align: center;
+  font-style: italic;
+  margin-top: 6px;
+  font-size: 0.9rem;
+}
+
+ol {
+  padding-left: 20px;
+}
+
+ul {
+  margin-top: 8px;
+}
+
+.video-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.video-wrapper iframe {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.tableau-wrapper {
+  width: 100%;
+  max-width: 1100px;
+  height: 650px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.tableau-wrapper iframe,
+.tableau-wrapper object,
+.tableau-wrapper embed {
+  width: 100%;
+  height: 650px;
+}
+
+.button-link {
+  display: inline-block;
+  padding: 12px 18px;
+  background-color: #1d4ed8;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.button-link:hover {
+  background-color: #153ea5;
+}
+
+.back-link {
+  font-weight: bold;
+  text-decoration: none;
+  color: #1d4ed8;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.small {
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
