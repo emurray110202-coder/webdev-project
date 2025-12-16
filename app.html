@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Number Guessing Game</title>
+  <title>NBA Jersey Number Game</title>
   <style>
     body {
       font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -21,7 +21,7 @@
       background-color: #161b22;
       padding: 2rem;
       border-radius: 1rem;
-      max-width: 420px;
+      max-width: 480px;
       width: 100%;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
@@ -31,9 +31,20 @@
       margin-bottom: 0.5rem;
     }
 
+    h2 {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
     p {
       margin-top: 0;
       margin-bottom: 0.75rem;
+    }
+
+    .player-name {
+      font-weight: 600;
+      font-size: 1.1rem;
     }
 
     input[type="number"] {
@@ -79,6 +90,12 @@
       color: #8b949e;
     }
 
+    .summary {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #c9d1d9;
+    }
+
     .link-row {
       margin-top: 1rem;
       font-size: 0.9rem;
@@ -96,28 +113,33 @@
 </head>
 <body>
   <div class="app-container">
-    <h1>Number Guessing Game</h1>
+    <h1>NBA Jersey Number Game</h1>
     <p>
-      I’m thinking of a number between <strong>1</strong> and <strong>100</strong>.
-      See how quickly you can figure it out.
+      I picked a group of well-known NBA players. For each round, I show you one player’s name, and
+      you guess the jersey number they are most famous for wearing.
     </p>
 
-    <label for="guessInput" class="small">Enter your guess:</label>
+    <h2>Current Player</h2>
+    <p class="player-name" id="playerName"></p>
+
+    <label for="guessInput" class="small">Guess this player's jersey number:</label>
     <input
       type="number"
       id="guessInput"
-      min="1"
-      max="100"
-      placeholder="Type a number from 1 to 100"
+      min="0"
+      max="99"
+      placeholder="Type a jersey number (0–99)"
     />
 
     <div>
       <button id="guessBtn">Guess</button>
+      <button id="newPlayerBtn" class="secondary">New Player</button>
       <button id="resetBtn" class="secondary">Reset Game</button>
     </div>
 
     <div class="status" id="statusMsg"></div>
     <p class="small" id="attemptsMsg"></p>
+    <p class="summary" id="scoreMsg"></p>
 
     <div class="link-row">
       <a href="scratch.html">Back to Basketball Scratch Page</a> |
@@ -126,52 +148,118 @@
   </div>
 
   <script>
-    let secretNumber;
-    let attempts;
+    const players = [
+      { name: "Stephen Curry", number: 30 },
+      { name: "LeBron James", number: 23 },
+      { name: "Kevin Durant", number: 35 },
+      { name: "Giannis Antetokounmpo", number: 34 },
+      { name: "Nikola Jokic", number: 15 },
+      { name: "Luka Doncic", number: 77 },
+      { name: "Kobe Bryant", number: 24 },
+      { name: "Michael Jordan", number: 23 },
+      { name: "Jayson Tatum", number: 0 },
+      { name: "Damian Lillard", number: 0 }
+    ];
 
-    function startGame() {
-      secretNumber = Math.floor(Math.random() * 100) + 1;
-      attempts = 0;
+    let currentPlayer = null;
+    let attemptsForCurrent = 0;
+    let totalCorrect = 0;
+    let totalRounds = 0;
+
+    function pickRandomPlayer() {
+      const index = Math.floor(Math.random() * players.length);
+      return players[index];
+    }
+
+    function startNewRound() {
+      currentPlayer = pickRandomPlayer();
+      attemptsForCurrent = 0;
+      document.getElementById("playerName").textContent = currentPlayer.name;
       document.getElementById("statusMsg").textContent =
-        "Game started. Make a guess to begin.";
+        "Make a guess for this player's jersey number.";
       document.getElementById("attemptsMsg").textContent = "";
       document.getElementById("guessInput").value = "";
       document.getElementById("guessBtn").disabled = false;
       document.getElementById("guessInput").focus();
     }
 
+    function updateScoreMessage() {
+      if (totalRounds === 0) {
+        document.getElementById("scoreMsg").textContent = "";
+        return;
+      }
+      document.getElementById("scoreMsg").textContent =
+        "Players guessed correctly: " + totalCorrect + " out of " + totalRounds + ".";
+    }
+
     function handleGuess() {
       const input = document.getElementById("guessInput");
       const value = Number(input.value);
 
-      if (!value || value < 1 || value > 100) {
+      if (!currentPlayer) {
         document.getElementById("statusMsg").textContent =
-          "Please enter a whole number between 1 and 100.";
+          "Click New Player to start a round.";
         return;
       }
 
-      attempts += 1;
+      if (!value && value !== 0) {
+        document.getElementById("statusMsg").textContent =
+          "Please enter a number between 0 and 99.";
+        return;
+      }
+
+      if (value < 0 || value > 99) {
+        document.getElementById("statusMsg").textContent =
+          "Please enter a number between 0 and 99.";
+        return;
+      }
+
+      attemptsForCurrent += 1;
       const status = document.getElementById("statusMsg");
       const attemptsMsg = document.getElementById("attemptsMsg");
 
-      if (value === secretNumber) {
-        status.textContent = value + " is correct. Nice work.";
-        attemptsMsg.textContent = "Total attempts: " + attempts + ".";
+      if (value === currentPlayer.number) {
+        status.textContent =
+          "Correct. " + currentPlayer.name + " is associated with number " + currentPlayer.number + ".";
+        attemptsMsg.textContent = "Attempts this round: " + attemptsForCurrent + ".";
+        totalCorrect += 1;
+        totalRounds += 1;
         document.getElementById("guessBtn").disabled = true;
-      } else if (value < secretNumber) {
-        status.textContent = "Too low. Try a higher number.";
-        attemptsMsg.textContent = "Attempts so far: " + attempts + ".";
+        updateScoreMessage();
+      } else if (value < currentPlayer.number) {
+        status.textContent = "That is too low. Try a higher number.";
+        attemptsMsg.textContent = "Attempts this round: " + attemptsForCurrent + ".";
       } else {
-        status.textContent = "Too high. Try a lower number.";
-        attemptsMsg.textContent = "Attempts so far: " + attempts + ".";
+        status.textContent = "That is too high. Try a lower number.";
+        attemptsMsg.textContent = "Attempts this round: " + attemptsForCurrent + ".";
       }
 
       input.focus();
       input.select();
     }
 
+    function resetGame() {
+      totalCorrect = 0;
+      totalRounds = 0;
+      attemptsForCurrent = 0;
+      document.getElementById("statusMsg").textContent =
+        "Game reset. Click New Player to start again.";
+      document.getElementById("attemptsMsg").textContent = "";
+      document.getElementById("scoreMsg").textContent = "";
+      document.getElementById("playerName").textContent = "";
+      document.getElementById("guessInput").value = "";
+      document.getElementById("guessBtn").disabled = false;
+    }
+
     document.getElementById("guessBtn").addEventListener("click", handleGuess);
-    document.getElementById("resetBtn").addEventListener("click", startGame);
+    document.getElementById("newPlayerBtn").addEventListener("click", function () {
+      if (currentPlayer && attemptsForCurrent > 0 && !document.getElementById("guessBtn").disabled) {
+        totalRounds += 1;
+        updateScoreMessage();
+      }
+      startNewRound();
+    });
+    document.getElementById("resetBtn").addEventListener("click", resetGame);
 
     document
       .getElementById("guessInput")
@@ -181,7 +269,7 @@
         }
       });
 
-    startGame();
+    startNewRound();
   </script>
 </body>
 </html>
